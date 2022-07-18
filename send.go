@@ -13,18 +13,19 @@ import (
 )
 
 var filename string
+var filesize int
+var file_Path string
 
 func sendfile(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprintln(w, "hello world!")
 	header := w.Header()
-	header.Add("Content-Type:", "application/octet-stream")
-	header.Add("Content-Disposition", "attachment;filename="+filename[2:]) //[2:]去掉前面的./
-	file, _ := ioutil.ReadFile("./" + filename)
-	si, _ := os.Stat("./" + filename)
+	header.Add("Content-Type", "application/octet-stream")
+	header.Add("Content-Disposition", "attachment;filename="+filename)
+	file, _ := ioutil.ReadFile(file_Path)
 
-	leng := strconv.Itoa(int(si.Size()))
-	header.Add("Content-Length", leng)
+	header.Add("Content-Length", strconv.Itoa(filesize))
 	w.Write(file)
+	//fmt.Println(w.Header())
 }
 func main() {
 	//sys_Info := runtime.GOOS //获取计算机系统
@@ -38,10 +39,12 @@ func main() {
 			break
 		}
 	}
-	filename = os.Args[1]
-
+	file_Path = os.Args[1]
+	file_Info, _ := os.Stat(file_Path)
+	filesize = int(file_Info.Size())
+	filename = file_Info.Name()
 	//加md5
-	filename_Byte := md5.Sum([]byte(filename))
+	filename_Byte := md5.Sum([]byte(file_Path))
 	filename_MD5 := fmt.Sprintf("%x", filename_Byte)
 
 	http.HandleFunc("/"+filename_MD5, sendfile)
@@ -51,7 +54,8 @@ func main() {
 	q, _ := qrcode.New(dl_URL, qrcode.Low)
 	art := q.ToString(false)
 	fmt.Println(art) //输出二维码
-	fmt.Println("filename:" + filename)
+	fmt.Println("file:" + file_Path)
+	//fmt.Println(filename)
 	fmt.Println(dl_URL)
 	http.ListenAndServe(":8000", nil)
 }
