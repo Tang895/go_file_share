@@ -50,6 +50,7 @@ func main() {
 	var interfaceSelect int
 	fmt.Scanln(&interfaceSelect)
 	ip = ips[interfaceSelect-1]
+	ip = ip[:len(ip)-3] //去掉掩码
 	file_Path = os.Args[1]
 	file_Info, _ := os.Stat(file_Path)
 	filesize = int(file_Info.Size())
