@@ -7,4 +7,5 @@ go写的一个局域网文件分享软件，直接生成二维码，手机扫码
 ```bash
 sendfile xxx.txt
 ```
-![image](https://github.com/Tang895/go_file_share/blob/34b6213f6c9a4a6e75c4e1739b60aa50dfe37ade/show_res.png)
+
+![image](https://raw.githubusercontent.com/Tang895/go_file_share/main/show_res.png)
